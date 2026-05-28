@@ -1,0 +1,99 @@
+<div class="container mt-5">
+    <h2 class="mb-4">🖥️ Gestor de Incidencias de Laboratorio</h2>
+
+    <div class="alert alert-info shadow-sm d-flex justify-content-between align-items-center mb-4 border-info">
+        <h5 class="mb-0 text-info-emphasis">📊 Dashboard General</h5>
+        <span class="fs-5 fw-bold text-dark">
+            Total reportadas: <span class="badge bg-primary fs-5 ms-2">{{ incidencias.length }}</span>
+        </span>
+    </div>
+
+    <div class="card p-4 mb-5 shadow-sm border-danger">
+        <h5 class="mb-3 text-danger">⚠️ Reportar Nueva Incidencia</h5>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="form-label fw-bold">Aula:</label>
+                <input [(ngModel)]="nuevaIncidencia.aula" class="form-control" placeholder="Ej. Lab 101">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label fw-bold">Equipo:</label>
+                <input [(ngModel)]="nuevaIncidencia.equipo" class="form-control" placeholder="Ej. PC-05">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label fw-bold">Tipo de fallo:</label>
+                <select [(ngModel)]="nuevaIncidencia.tipo" class="form-select">
+                    <option value="" disabled selected>-- Seleccione --</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Software">Software</option>
+                    <option value="Red / Internet">Red / Internet</option>
+                </select>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Descripción del problema:</label>
+                <input [(ngModel)]="nuevaIncidencia.descripcion" class="form-control" placeholder="Ej. El mouse no funciona, pantalla azul, etc...">
+            </div>
+        </div>
+        <button class="btn btn-danger w-100 fw-bold" (click)="registrar()">Registrar Incidencia</button>
+    </div>
+
+    <hr class="my-4">
+
+    <h4 class="mb-3">Registro Histórico</h4>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover table-bordered align-middle text-center mb-0 bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Aula</th>
+                    <th>Equipo</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (incidencia of incidencias; track incidencia.id) {
+                    <tr>
+                        <td class="fw-bold">{{ incidencia.id }}</td>
+                        <td>{{ incidencia.aula }}</td>
+                        <td>{{ incidencia.equipo }}</td>
+                        <td><span class="badge bg-secondary">{{ incidencia.tipo }}</span></td>
+                        <td class="text-start text-muted">{{ incidencia.descripcion }}</td>
+                        
+                        <td>
+                            @if (incidencia.estado === 'Pendiente') {
+                                <span class="badge bg-danger p-2">Pendiente</span>
+                            } @else if (incidencia.estado === 'En proceso') {
+                                <span class="badge bg-warning text-dark p-2">En proceso</span>
+                            } @else {
+                                <span class="badge bg-success p-2">Atendida</span>
+                            }
+                        </td>
+
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-warning fw-bold" 
+                                        (click)="cambiarEstado(incidencia.id, 'En proceso')" 
+                                        [disabled]="incidencia.estado === 'En proceso' || incidencia.estado === 'Atendida'">
+                                    En Proceso
+                                </button>
+                                <button class="btn btn-outline-success fw-bold" 
+                                        (click)="cambiarEstado(incidencia.id, 'Atendida')" 
+                                        [disabled]="incidencia.estado === 'Atendida'">
+                                    Atender
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="7" class="text-muted p-4">
+                            No hay incidencias reportadas en los laboratorios en este momento.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

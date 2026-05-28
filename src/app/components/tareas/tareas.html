@@ -1,0 +1,75 @@
+<div class="container mt-5">
+    <h2 class="mb-4">Gestión de Tareas Académicas</h2>
+
+    <div class="card p-4 mb-4 shadow-sm border-primary">
+        <h5 class="mb-3">Nueva Tarea</h5>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Título:</label>
+                <input [(ngModel)]="nuevaTarea.titulo" class="form-control" placeholder="Ej: Laboratorio 1">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Curso:</label>
+                <input [(ngModel)]="nuevaTarea.curso" class="form-control" placeholder="Ej: Programación Web">
+            </div>
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Descripción:</label>
+                <input [(ngModel)]="nuevaTarea.descripcion" class="form-control" placeholder="Instrucciones de la tarea...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Fecha de Vencimiento:</label>
+                <input type="date" [(ngModel)]="nuevaTarea.fechaVencimiento" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Prioridad:</label>
+                <select [(ngModel)]="nuevaTarea.prioridad" class="form-select">
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary w-100 fw-bold" (click)="crear()">+ Guardar Tarea</button>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+        @for (tarea of tareas; track tarea.id) {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-start border-4" 
+                     [class.border-danger]="tarea.prioridad === 'Alta'"
+                     [class.border-info]="tarea.prioridad !== 'Alta'">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark fw-bold">{{ tarea.titulo }}</h5>
+                        <h6 class="card-subtitle mb-2 text-primary">{{ tarea.curso }}</h6>
+                        <p class="card-text text-secondary">{{ tarea.descripcion }}</p>
+                        
+                        <p class="mb-2 small">
+                            <strong>📅 Vence:</strong> {{ tarea.fechaVencimiento | date:'longDate' }}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="badge bg-secondary me-2">{{ tarea.estado }}</span>
+                                @if (tarea.prioridad === 'Alta') {
+                                    <span class="badge bg-danger animate__animated animate__pulse animate__infinite">¡URGENTE!</span>
+                                } @else {
+                                    <span class="badge bg-light text-dark border">{{ tarea.prioridad }}</span>
+                                }
+                            </div>
+                            
+                            <button class="btn btn-sm btn-outline-danger" (click)="eliminar(tarea.id)">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } @empty {
+            <div class="col-12">
+                <div class="alert alert-warning text-center">No hay tareas académicas registradas en este momento.</div>
+            </div>
+        }
+    </div>
+</div>
