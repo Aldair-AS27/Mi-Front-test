@@ -8,20 +8,19 @@ import { Incidencia } from '../../models/incidencia.interface';
   selector: 'app-incidencia',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './incidencia.html'
+  templateUrl: './incidencia.html',
 })
 export class IncidenciaComponent implements OnInit {
   incidencias: Incidencia[] = [];
   private incidenciaService = inject(IncidenciaService);
 
-  // Objeto enlazado al formulario de la vista
+  // CORRECCIÓN 1: Eliminamos el id: 0. Solo enviamos lo que el backend realmente espera
   nuevaIncidencia: Incidencia = {
-    id: 0, 
     aula: '',
     equipo: '',
     tipo: '',
     descripcion: '',
-    estado: 'PENDIENTE' // Sincronizado con las mayúsculas del Backend
+    estado: 'PENDIENTE'
   };
 
   ngOnInit() {
@@ -41,17 +40,16 @@ export class IncidenciaComponent implements OnInit {
       return;
     }
 
-    // Se asigna la estampa de tiempo actual automáticamente
-    this.nuevaIncidencia.fechaRegistro = new Date().toISOString();
+    // CORRECCIÓN 2: Eliminamos la generación manual de la fecha.
+    // Dejamos que la base de datos se encargue de eso.
 
     this.incidenciaService.crearIncidencia(this.nuevaIncidencia).subscribe({
       next: () => {
         alert('✅ Incidencia registrada correctamente en la base de datos.');
         this.cargarIncidencias();
         
-        // Inicialización de limpieza del formulario manteniendo consistencia
+        // CORRECCIÓN 3: Eliminamos el id: 0 también en la limpieza del formulario
         this.nuevaIncidencia = { 
-          id: 0, 
           aula: '', 
           equipo: '', 
           tipo: '', 

@@ -78,3 +78,22 @@
                                         [disabled]="incidencia.estado === 'EN PROCESO' || incidencia.estado === 'ATENDIDA'">
                                     En Proceso
                                 </button>
+                                <button class="btn btn-outline-success fw-bold" 
+                                        (click)="cambiarEstado(incidencia.id, 'ATENDIDA')" 
+                                        [disabled]="incidencia.estado === 'ATENDIDA'">
+                                    Atender
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="7" class="text-muted p-4">
+                            No hay incidencias reportadas en los laboratorios en este momento.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
